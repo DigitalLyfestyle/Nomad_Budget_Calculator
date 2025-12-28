@@ -13,6 +13,16 @@
     { key: 'en', label: 'Entertainment', defaultValue: 200 },
     { key: 'su', label: 'Subscriptions', defaultValue: 80 },
     { key: 'mi', label: 'Misc', defaultValue: 120 }
+    { key: 'ac', label: 'Accommodation', max: 4000, defaultValue: 1200 },
+    { key: 'ut', label: 'Utilities', max: 800, defaultValue: 200 },
+    { key: 'fd', label: 'Food & groceries', max: 2000, defaultValue: 500 },
+    { key: 'tr', label: 'Local transport', max: 1200, defaultValue: 180 },
+    { key: 'cw', label: 'Coworking / work setup', max: 1500, defaultValue: 250 },
+    { key: 'hi', label: 'Health insurance', max: 1200, defaultValue: 180 },
+    { key: 'vi', label: 'Visa/immigration', max: 800, defaultValue: 100 },
+    { key: 'en', label: 'Entertainment', max: 1500, defaultValue: 200 },
+    { key: 'su', label: 'Subscriptions', max: 800, defaultValue: 80 },
+    { key: 'mi', label: 'Misc', max: 1000, defaultValue: 120 }
   ];
 
   const presets = {
@@ -20,8 +30,6 @@
     balanced: { ac: 1200, ut: 220, fd: 550, tr: 180, cw: 250, hi: 180, vi: 100, en: 200, su: 80, mi: 140 },
     comfortable: { ac: 1800, ut: 300, fd: 750, tr: 260, cw: 320, hi: 240, vi: 140, en: 320, su: 120, mi: 220 }
   };
-
-  const MAX_CATEGORY_VALUE = 9999999999;
 
   const defaultState = {
     destination: '',
@@ -93,10 +101,17 @@
       wrapper.innerHTML = `
         <div>
           <h3>${cat.label}</h3>
-          <p class="hint">Enter monthly amount (supports large values)</p>
+          <p class="hint">Enter monthly amount</p>
         </div>
         <div class="inputs">
-          <input type="number" min="0" max="${MAX_CATEGORY_VALUE}" step="1" inputmode="decimal" aria-label="${cat.label} amount" data-key="${cat.key}" />
+          <input type="number" min="0" step="10" aria-label="${cat.label} amount" data-key="${cat.key}" />
+          <p class="hint">Slide or type</p>
+        </div>
+        <div class="inputs">
+          <div class="slider-row">
+            <input type="range" min="0" max="${cat.max}" step="10" aria-label="${cat.label} slider" data-key="${cat.key}" />
+            <input type="number" min="0" max="${cat.max}" step="10" aria-label="${cat.label} amount" data-key="${cat.key}" />
+          </div>
         </div>
       `;
       els.categoryList.appendChild(wrapper);
@@ -114,6 +129,10 @@
     const numberInputs = els.categoryList.querySelectorAll('input[type="number"]');
 
     numberInputs.forEach((input) => {
+    const rangeInputs = els.categoryList.querySelectorAll('input[type="range"]');
+    const numberInputs = els.categoryList.querySelectorAll('input[type="number"]');
+
+    [...rangeInputs, ...numberInputs].forEach((input) => {
       const key = input.dataset.key;
       const value = state.categories[key] || 0;
       input.value = value;
@@ -143,20 +162,14 @@
     return num;
   }
 
-  function clampCategoryValues() {
-    categories.forEach(({ key }) => {
-      const safe = getNumber(state.categories[key], 0);
-      state.categories[key] = Math.min(Math.max(safe, 0), MAX_CATEGORY_VALUE);
-    });
-  }
-
   function attachCategoryListeners() {
     els.categoryList.addEventListener('input', (e) => {
       const target = e.target;
       const key = target.dataset.key;
       if (!key) return;
       const num = getNumber(target.value, state.categories[key] || 0);
-      state.categories[key] = Math.min(Math.max(num, 0), MAX_CATEGORY_VALUE);
+      state.categories[key] = Math.max(num, 0);
+      state.categories[key] = Math.min(Math.max(num, 0), categories.find((c) => c.key === key)?.max || num);
       syncCategoryInputs(key, target);
       saveState();
       calculate();
@@ -453,7 +466,6 @@
         const parsed = JSON.parse(data);
         if (parsed.remember) {
           state = { ...state, ...parsed, categories: { ...state.categories, ...parsed.categories }, buffer: { ...state.buffer, ...parsed.buffer }, oneTime: { ...state.oneTime, ...parsed.oneTime } };
-          clampCategoryValues();
         }
       }
     } catch (e) {
@@ -478,8 +490,6 @@
       const val = params.get(cat.key);
       if (val !== null) state.categories[cat.key] = getNumber(val, state.categories[cat.key]);
     });
-
-    clampCategoryValues();
 
     ['flight', 'deposit', 'gear'].forEach((key) => {
       const val = params.get(key);
