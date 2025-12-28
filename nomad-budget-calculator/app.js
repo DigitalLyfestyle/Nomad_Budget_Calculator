@@ -33,8 +33,7 @@
     oneTime: { flight: 800, deposit: 1000, gear: 400 },
     savings: 0,
     income: 0,
-    remember: false,
-    theme: 'auto'
+    remember: false
   };
 
   let state = { ...defaultState, categories: { ...defaultState.categories }, buffer: { ...defaultState.buffer }, oneTime: { ...defaultState.oneTime } };
@@ -126,7 +125,6 @@
     els.income.value = state.income;
     updatePresetButtons();
     updateBufferHint();
-    applyTheme(state.theme || 'auto');
   }
 
   function updatePresetButtons() {
@@ -492,37 +490,6 @@
     window.parent?.postMessage({ type: 'nbc-height', height }, '*');
   }
 
-  function applyTheme(theme) {
-    const root = document.querySelector('.dl-nomad-budget');
-    root.setAttribute('data-theme', theme);
-    state.theme = theme;
-    document.querySelectorAll('.theme-btn').forEach((btn) => {
-      const pressed = btn.dataset.theme === theme;
-      btn.setAttribute('aria-pressed', pressed.toString());
-    });
-    saveState();
-  }
-
-  function attachThemeButtons() {
-    document.querySelectorAll('.theme-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        applyTheme(btn.dataset.theme);
-      });
-    });
-  }
-
-  function initRememberedTheme() {
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (data) {
-      try {
-        const parsed = JSON.parse(data);
-        if (parsed.theme) state.theme = parsed.theme;
-      } catch (e) {
-        // ignore
-      }
-    }
-  }
-
   function bindAccessibility() {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' && e.target.classList.contains('chip')) {
@@ -536,7 +503,6 @@
     initElements();
     renderCategories();
     initElements();
-    initRememberedTheme();
     loadFromStorage();
     loadFromQuery();
     hydrateUI();
@@ -544,7 +510,6 @@
     attachBufferListeners();
     attachOneTimeListeners();
     attachMetaListeners();
-    attachThemeButtons();
     bindAccessibility();
     calculate();
     sendHeight();
