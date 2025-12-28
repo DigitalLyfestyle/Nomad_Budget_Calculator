@@ -3,6 +3,16 @@
   const STORAGE_KEY = 'nomad-budget-state-v1';
 
   const categories = [
+    { key: 'ac', label: 'Accommodation', defaultValue: 1200 },
+    { key: 'ut', label: 'Utilities', defaultValue: 200 },
+    { key: 'fd', label: 'Food & groceries', defaultValue: 500 },
+    { key: 'tr', label: 'Local transport', defaultValue: 180 },
+    { key: 'cw', label: 'Coworking / work setup', defaultValue: 250 },
+    { key: 'hi', label: 'Health insurance', defaultValue: 180 },
+    { key: 'vi', label: 'Visa/immigration', defaultValue: 100 },
+    { key: 'en', label: 'Entertainment', defaultValue: 200 },
+    { key: 'su', label: 'Subscriptions', defaultValue: 80 },
+    { key: 'mi', label: 'Misc', defaultValue: 120 }
     { key: 'ac', label: 'Accommodation', max: 4000, defaultValue: 1200 },
     { key: 'ut', label: 'Utilities', max: 800, defaultValue: 200 },
     { key: 'fd', label: 'Food & groceries', max: 2000, defaultValue: 500 },
@@ -91,6 +101,10 @@
       wrapper.innerHTML = `
         <div>
           <h3>${cat.label}</h3>
+          <p class="hint">Enter monthly amount</p>
+        </div>
+        <div class="inputs">
+          <input type="number" min="0" step="10" aria-label="${cat.label} amount" data-key="${cat.key}" />
           <p class="hint">Slide or type</p>
         </div>
         <div class="inputs">
@@ -112,6 +126,9 @@
     els.bufferValue.value = state.buffer.value;
     els.bufferRadios.forEach((radio) => (radio.checked = radio.value === state.buffer.mode));
 
+    const numberInputs = els.categoryList.querySelectorAll('input[type="number"]');
+
+    numberInputs.forEach((input) => {
     const rangeInputs = els.categoryList.querySelectorAll('input[type="range"]');
     const numberInputs = els.categoryList.querySelectorAll('input[type="number"]');
 
@@ -151,6 +168,7 @@
       const key = target.dataset.key;
       if (!key) return;
       const num = getNumber(target.value, state.categories[key] || 0);
+      state.categories[key] = Math.max(num, 0);
       state.categories[key] = Math.min(Math.max(num, 0), categories.find((c) => c.key === key)?.max || num);
       syncCategoryInputs(key, target);
       saveState();

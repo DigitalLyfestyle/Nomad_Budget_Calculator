@@ -7,11 +7,13 @@ Open `index.html` locally or host the `nomad-budget-calculator/` folder on any s
 
 ## Local testing
 - **Run it locally:** From this folder run `python -m http.server 8000` and open `http://localhost:8000/index.html` (or simply double-click `index.html`).
+- **Exercise flows:** Try presets, adjust amounts, toggle buffer modes, collapse/expand one-time costs, and confirm the sticky results update smoothly.
 - **Exercise flows:** Try presets, adjust sliders/inputs, toggle buffer modes, collapse/expand one-time costs, and confirm the sticky results update smoothly.
 - **Share URL:** Create a share link, paste it into a new tab, and verify values hydrate. Try clearing the query string to return to defaults.
 - **Remember toggle:** Enable "Remember my numbers" then reload; disable it and reload to ensure data clears.
 - **CSV export:** Click **Export CSV** and open the file to confirm rows contain your current numbers.
 - **Theme toggle:** Switch light/dark modes and reload to verify the override persists until changed.
+- **Keyboard nav:** Tab through controls (including preset chips and numeric inputs) to confirm visible focus and operability via keyboard.
 - **Keyboard nav:** Tab through controls (including preset chips and sliders) to confirm visible focus and operability via keyboard.
 
 ## Configuration
@@ -46,6 +48,7 @@ Open `index.html` locally or host the `nomad-budget-calculator/` folder on any s
 - Toggling "Remember my numbers" persists or clears data appropriately.
 - Generate a share URL, reload with that URL, and confirm values hydrate.
 - CSV export downloads with expected rows and currency values.
+- Keyboard navigation reaches numeric inputs, buttons, and chips with visible focus rings.
 - Keyboard navigation reaches sliders, buttons, and chips with visible focus rings.
 - Buffer switch between percentage and fixed works; warnings appear when buffer &lt; 5%.
 - One-time costs collapse toggle works and updates embed height.

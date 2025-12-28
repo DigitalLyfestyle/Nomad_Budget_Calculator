@@ -244,6 +244,9 @@ button:focus-visible {
 }
 
 .category .inputs {
+  width: min(260px, 100%);
+  display: flex;
+  justify-content: flex-end;
   display: grid;
   gap: 0.4rem;
   width: min(420px, 100%);
