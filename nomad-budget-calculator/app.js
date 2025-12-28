@@ -13,6 +13,16 @@
     { key: 'en', label: 'Entertainment', defaultValue: 200 },
     { key: 'su', label: 'Subscriptions', defaultValue: 80 },
     { key: 'mi', label: 'Misc', defaultValue: 120 }
+    { key: 'ac', label: 'Accommodation', max: 4000, defaultValue: 1200 },
+    { key: 'ut', label: 'Utilities', max: 800, defaultValue: 200 },
+    { key: 'fd', label: 'Food & groceries', max: 2000, defaultValue: 500 },
+    { key: 'tr', label: 'Local transport', max: 1200, defaultValue: 180 },
+    { key: 'cw', label: 'Coworking / work setup', max: 1500, defaultValue: 250 },
+    { key: 'hi', label: 'Health insurance', max: 1200, defaultValue: 180 },
+    { key: 'vi', label: 'Visa/immigration', max: 800, defaultValue: 100 },
+    { key: 'en', label: 'Entertainment', max: 1500, defaultValue: 200 },
+    { key: 'su', label: 'Subscriptions', max: 800, defaultValue: 80 },
+    { key: 'mi', label: 'Misc', max: 1000, defaultValue: 120 }
   ];
 
   const presets = {
@@ -95,6 +105,13 @@
         </div>
         <div class="inputs">
           <input type="number" min="0" step="10" aria-label="${cat.label} amount" data-key="${cat.key}" />
+          <p class="hint">Slide or type</p>
+        </div>
+        <div class="inputs">
+          <div class="slider-row">
+            <input type="range" min="0" max="${cat.max}" step="10" aria-label="${cat.label} slider" data-key="${cat.key}" />
+            <input type="number" min="0" max="${cat.max}" step="10" aria-label="${cat.label} amount" data-key="${cat.key}" />
+          </div>
         </div>
       `;
       els.categoryList.appendChild(wrapper);
@@ -112,6 +129,10 @@
     const numberInputs = els.categoryList.querySelectorAll('input[type="number"]');
 
     numberInputs.forEach((input) => {
+    const rangeInputs = els.categoryList.querySelectorAll('input[type="range"]');
+    const numberInputs = els.categoryList.querySelectorAll('input[type="number"]');
+
+    [...rangeInputs, ...numberInputs].forEach((input) => {
       const key = input.dataset.key;
       const value = state.categories[key] || 0;
       input.value = value;
@@ -148,6 +169,7 @@
       if (!key) return;
       const num = getNumber(target.value, state.categories[key] || 0);
       state.categories[key] = Math.max(num, 0);
+      state.categories[key] = Math.min(Math.max(num, 0), categories.find((c) => c.key === key)?.max || num);
       syncCategoryInputs(key, target);
       saveState();
       calculate();
