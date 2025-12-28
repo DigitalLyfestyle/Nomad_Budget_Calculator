@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Embed Nomad Budget Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1rem; color: #111; line-height: 1.5; }
+    code { background: #f4f4f4; padding: 0.2rem 0.35rem; border-radius: 4px; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    iframe { width: 100%; min-height: 760px; border: 0; }
+    @media (max-width: 640px) { iframe { min-height: 900px; } }
+  </style>
+</head>
+<body>
+  <h1>Squarespace embed snippet</h1>
+  <p>Paste this iframe into a Squarespace Embed Block. Update <code>src</code> to your host.</p>
+  <pre>&lt;iframe src="https://tools.digitallyfestyle.com/nomad-budget-calculator/" width="100%" style="min-height:760px;border:0;" allow="clipboard-read; clipboard-write" loading="lazy"&gt;&lt;/iframe&gt;</pre>
+
+  <h2>Optional auto-height</h2>
+  <p>Include this script on the Squarespace page to smoothly adapt the iframe height. Replace <code>ALLOWED_ORIGIN</code> with your calculator origin (e.g. <code>https://tools.digitallyfestyle.com</code>).</p>
+  <pre>&lt;script&gt;
+const iframe = document.querySelector('iframe[src*="nomad-budget-calculator"]');
+const ALLOWED_ORIGIN = 'https://tools.digitallyfestyle.com';
+window.addEventListener('message', (event) =&gt; {
+  if (!iframe) return;
+  if (event.origin !== ALLOWED_ORIGIN) return;
+  if (event.data?.type === 'nbc-height' && Number.isFinite(event.data.height)) {
+    iframe.style.height = Math.max(event.data.height, 760) + 'px';
+  }
+});
+&lt;/script&gt;</pre>
+</body>
+</html>
