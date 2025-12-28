@@ -27,7 +27,7 @@ Open `index.html` locally or host the `nomad-budget-calculator/` folder on any s
 
 ## Features
 - Modern two-column layout with sticky results on desktop and stacked layout on mobile.
-- Fixed dark theme tuned for contrast and readability.
+- Prefers-color-scheme aware dark mode with user override toggle.
 - Local persistence only when "Remember my numbers" is enabled (uses `localStorage`).
 - Shareable URLs via compact query parameters; landing on a shared URL hydrates the calculator state.
 - CSV export of all inputs and computed totals.
@@ -43,7 +43,7 @@ Open `index.html` locally or host the `nomad-budget-calculator/` folder on any s
 
 ## Manual QA checklist
 - Mobile & desktop layouts align and results card remains legible.
-- Dark theme renders consistently across mobile and desktop.
+- Dark mode respects system preference and manual toggle overrides.
 - Toggling "Remember my numbers" persists or clears data appropriately.
 - Generate a share URL, reload with that URL, and confirm values hydrate.
 - CSV export downloads with expected rows and currency values.

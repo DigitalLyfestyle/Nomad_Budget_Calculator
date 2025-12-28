@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dl-nomad-budget">
+<html lang="en" class="dl-nomad-budget" data-theme="auto">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,6 +21,11 @@
         <div class="toggle-field">
           <label for="rememberToggle">Remember my numbers on this device</label>
           <input type="checkbox" id="rememberToggle" />
+        </div>
+        <div class="theme-switch" aria-label="Color theme">
+          <button class="theme-btn" data-theme="auto" aria-pressed="true">Auto</button>
+          <button class="theme-btn" data-theme="light" aria-pressed="false">Light</button>
+          <button class="theme-btn" data-theme="dark" aria-pressed="false">Dark</button>
         </div>
       </div>
     </header>
