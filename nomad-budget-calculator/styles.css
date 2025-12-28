@@ -65,6 +65,11 @@
   box-shadow: var(--dl-card-shadow);
 }
 
+/* Optional: highlight the whole toggle-field container if the select is inside it */
+.toggle-field:hover {
+  border-color: rgba(125, 211, 252, 0.35);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.42);
+}
 
 .layout {
   display: grid;
@@ -124,6 +129,20 @@ select {
   transition: border-color 140ms ease, box-shadow 140ms ease;
 }
 
+/* Dropdowns (currency + family size) */
+select {
+  cursor: pointer;
+}
+
+select:hover {
+  border-color: rgba(125, 211, 252, 0.55);
+  box-shadow: 0 0 0 3px rgba(125, 211, 252, 0.08);
+}
+
+select:active {
+  transform: translateY(0);
+}
+
 input:focus,
 select:focus,
 button:focus-visible {
@@ -147,11 +166,22 @@ button:focus-visible {
 .chip {
   border: 1px solid var(--dl-border);
   background: transparent;
-  color: var(--dl-text);
+  color: var(--dl-text); /* ensures readable inactive text */
   border-radius: 999px;
   padding: 0.45rem 0.85rem;
   cursor: pointer;
   transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+/* Preset pills (inactive + hover) */
+.chip:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(125, 211, 252, 0.45);
+  transform: translateY(-1px);
+}
+
+.chip:active {
+  transform: translateY(0);
 }
 
 .chip.active {
