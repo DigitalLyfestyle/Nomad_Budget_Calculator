@@ -63,6 +63,8 @@
     els.net = qs('net');
     els.chart = qs('chart');
     els.warnings = qs('warnings');
+    els.netCashChart = qs('netCashChart');
+    els.netCashSummary = qs('netCashSummary');
     els.calculate = qs('calculate');
     els.share = qs('share');
     els.csv = qs('csv');
@@ -280,6 +282,7 @@
 
     renderBars(subtotal, bufferAmount);
     renderWarnings(subtotal, bufferAmount, monthlyTotal);
+    renderNetCashGraph(monthlyTotal, oneTimeTotal);
     saveState();
     sendHeight();
   }
@@ -324,6 +327,38 @@
       div.innerHTML = `<span class="dot" aria-hidden="true"></span><span>${msg}</span>`;
       els.warnings.appendChild(div);
     });
+  }
+
+  function renderNetCashGraph(monthlyTotal, oneTimeTotal) {
+    if (!els.netCashChart) return;
+    const income = getNumber(state.income, 0);
+    const months = Array.from({ length: 6 }, (_, i) => {
+      const expenses = monthlyTotal + (i === 0 ? oneTimeTotal : 0);
+      return { month: i + 1, net: income - expenses };
+    });
+
+    const maxAbs = Math.max(1, ...months.map((m) => Math.abs(m.net)));
+    els.netCashChart.innerHTML = '';
+
+    months.forEach((m) => {
+      const row = document.createElement('div');
+      row.className = 'net-bar';
+      const percent = Math.round((Math.abs(m.net) / maxAbs) * 100);
+      row.innerHTML = `
+        <span class="label" aria-hidden="true">M${m.month}</span>
+        <div class="net-track" aria-hidden="true">
+          <div class="net-fill ${m.net >= 0 ? 'positive' : 'negative'}" style="width:${percent}%"></div>
+        </div>
+        <span class="metric-value">${m.net >= 0 ? '+' : ''}${formatCurrency(m.net)}</span>
+      `;
+      row.setAttribute('aria-label', `Month ${m.month} net ${m.net >= 0 ? 'surplus' : 'deficit'} of ${formatCurrency(m.net)}`);
+      els.netCashChart.appendChild(row);
+    });
+
+    if (els.netCashSummary && months.length) {
+      const firstNet = months[0].net;
+      els.netCashSummary.textContent = `${firstNet >= 0 ? 'Month 1 surplus' : 'Month 1 shortfall'} ${formatCurrency(firstNet)}`;
+    }
   }
 
   function updateBufferHint() {
